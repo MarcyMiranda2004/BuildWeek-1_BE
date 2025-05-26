@@ -11,8 +11,8 @@ public class DistributoreAutomatizzato extends PuntoVendita {
 
     public DistributoreAutomatizzato() {}
 
-    public DistributoreAutomatizzato(Long id, String nome, String indirizzo, boolean attivo) {
-        super(id, nome, indirizzo);
+    public DistributoreAutomatizzato(String nome, String indirizzo, boolean attivo) {
+        super(nome, indirizzo);
         this.attivo = attivo;
     }
 

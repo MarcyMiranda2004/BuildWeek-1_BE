@@ -24,9 +24,8 @@ public class Abbonamento extends TitoloViaggio {
 
     public Abbonamento() {}
 
-    public Abbonamento(Long id, String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente,
-                       Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA) {
-        super(id, codice, dataEmissione, puntoVendita, utente);
+    public Abbonamento(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente, Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA) {
+        super(codice, dataEmissione, puntoVendita, utente);
         this.periodicita = periodicita;
         this.tipo = tipo;
         this.validoDa = validoDa;

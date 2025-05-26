@@ -25,9 +25,8 @@ public class Biglietto extends TitoloViaggio {
 
     public Biglietto() {}
 
-    public Biglietto(Long id, String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente,
-                     boolean validato, Mezzo mezzoValidato, LocalDateTime dataValidazione, TipoMezzo tipo) {
-        super(id, codice, dataEmissione, puntoVendita, utente);
+    public Biglietto(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente, boolean validato, Mezzo mezzoValidato, LocalDateTime dataValidazione, TipoMezzo tipo) {
+        super(codice, dataEmissione, puntoVendita, utente);
         this.validato = validato;
         this.mezzoValidato = mezzoValidato;
         this.dataValidazione = dataValidazione;
