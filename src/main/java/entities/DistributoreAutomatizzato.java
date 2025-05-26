@@ -1,0 +1,33 @@
+package entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+public class DistributoreAutomatizzato extends PuntoVendita {
+
+    @Column(name = "attivo", nullable = false)
+    private boolean attivo;
+
+    public DistributoreAutomatizzato() {}
+
+    public DistributoreAutomatizzato(Long id, String nome, String indirizzo, boolean attivo) {
+        super(id, nome, indirizzo);
+        this.attivo = attivo;
+    }
+
+    public boolean isAttivo() {
+        return attivo;
+    }
+
+    public void setAttivo(boolean attivo) {
+        this.attivo = attivo;
+    }
+
+    @Override
+    public String toString() {
+        return "DistributoreAutomatizzato{" +
+                "attivo=" + attivo +
+                "} " + super.toString();
+    }
+}
