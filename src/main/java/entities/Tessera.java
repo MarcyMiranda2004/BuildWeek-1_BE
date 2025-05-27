@@ -2,6 +2,7 @@ package entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 public class Tessera {
@@ -10,8 +11,8 @@ public class Tessera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String codice;
+    @Column(unique = true, nullable = false, updatable = false)
+    private UUID codice;
 
     @Column(name = "data_emissione", nullable = false)
     private LocalDate dataEmissione;
@@ -23,20 +24,20 @@ public class Tessera {
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
-    public Tessera() {}
+    public Tessera() {
+        this.codice = UUID.randomUUID();
+    }
 
-    public Tessera(String codice, LocalDate dataEmissione, LocalDate dataScadenza, Utente utente) {
-        this.codice = codice;
+    public Tessera(LocalDate dataEmissione, LocalDate dataScadenza, Utente utente) {
+        this.codice = UUID.randomUUID();
         this.dataEmissione = dataEmissione;
         this.dataScadenza = dataScadenza;
         this.utente = utente;
     }
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public String getCodice() { return codice; }
-    public void setCodice(String codice) { this.codice = codice; }
+    public UUID getCodice() { return codice; }
 
     public LocalDate getDataEmissione() { return dataEmissione; }
     public void setDataEmissione(LocalDate dataEmissione) { this.dataEmissione = dataEmissione; }
@@ -58,3 +59,4 @@ public class Tessera {
                 '}';
     }
 }
+

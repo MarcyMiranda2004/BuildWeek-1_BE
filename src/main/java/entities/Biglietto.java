@@ -16,7 +16,7 @@ public class Biglietto extends TitoloViaggio {
     @JoinColumn(name = "mezzo_validato_id", nullable = false)
     private Mezzo mezzoValidato;
 
-    @Column(name = "data_validazione", nullable = false)
+    @Column(name = "data_validazione")
     private LocalDateTime dataValidazione;
 
     @Enumerated(EnumType.STRING)
@@ -44,6 +44,33 @@ public class Biglietto extends TitoloViaggio {
 
     public TipoMezzo getTipo() {return tipo;}
     public void setTipo(TipoMezzo tipo) {this.tipo = tipo;}
+
+    // Metodo Creazione Biglietti
+    public static Biglietto creaBiglietto(Mezzo mezzo, Utente utente, PuntoVendita puntoVendita) {
+        Biglietto biglietto = new Biglietto();
+        biglietto.setCodice("B-" + java.util.UUID.randomUUID());
+        biglietto.setDataEmissione(LocalDate.now());
+        biglietto.setUtente(utente);
+        biglietto.setPuntoVendita(puntoVendita);
+        biglietto.setValidato(false);
+        biglietto.setMezzoValidato(mezzo);
+        biglietto.setTipo(mezzo.getTipo());
+
+        return biglietto;
+    }
+
+    // Metodo validazione Biglietti
+    public static Biglietto validaBiglietto(Biglietto biglietto) {
+        if (!biglietto.isValidato()) {
+            biglietto.setValidato(true);
+            biglietto.setDataValidazione(LocalDateTime.now());
+        } else {
+            System.out.println("Biglietto già validato o non valido.");
+        }
+
+        return biglietto;
+    }
+
 
     @Override
     public String toString() {
