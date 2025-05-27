@@ -33,8 +33,17 @@ public class Mezzo {
 
     public Mezzo() {}
 
-    public Mezzo(Long id, TipoMezzo tipo, int capienza, StatoMezzo stato, List<PeriodoStato> storicoStati, List<PercorrenzaTratta> trattePercorse) {
-        this.id = id;
+    //Costruttore per il settaggio dei mezzi di base
+    public Mezzo(TipoMezzo tipo, int capienza, StatoMezzo stato) {
+        this.tipo = tipo;
+        this.capienza = capienza;
+        this.stato = stato;
+        this.storicoStati = new ArrayList<>();
+        this.trattePercorse = new ArrayList<>();
+    }
+
+    //costruttore con recupero degli stai del mezzo come lista
+    public Mezzo(TipoMezzo tipo, int capienza, StatoMezzo stato, List<PeriodoStato> storicoStati, List<PercorrenzaTratta> trattePercorse) {
         this.tipo = tipo;
         this.capienza = capienza;
         this.stato = stato;
