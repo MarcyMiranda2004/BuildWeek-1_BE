@@ -19,5 +19,7 @@ public class TesseraDao {
     public Tessera findById(Long id) {
         return em.find(Tessera.class, id);
     }
+
+    // Metodo per il rinnovo della tessera dopo un anno
 }
 

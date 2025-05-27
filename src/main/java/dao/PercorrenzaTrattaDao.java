@@ -19,5 +19,6 @@ public class PercorrenzaTrattaDao {
     public PercorrenzaTratta findById(Long id) {
         return em.find(PercorrenzaTratta.class, id);
     }
+
 }
 

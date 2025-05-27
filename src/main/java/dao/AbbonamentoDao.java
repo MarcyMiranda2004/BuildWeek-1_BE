@@ -19,5 +19,7 @@ public class AbbonamentoDao {
     public Abbonamento findById(Long id) {
         return em.find(Abbonamento.class, id);
     }
+
+
 }
 
