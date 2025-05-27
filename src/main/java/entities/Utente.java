@@ -3,42 +3,47 @@ package entities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Utente")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Utente {
+public class Utente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
+
     private String cognome;
 
-    @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Tessera tessera;
+    @Column(nullable = false, length = 20)
+    private String username;
 
-    public Utente() {}
+    @Column(nullable = false, length = 20)
+    private String password;
 
-    public Utente(String nome, String cognome) {
+    public Utente() {
+    }
+
+    public Utente(String nome, String cognome, String username, String password) {
         this.nome = nome;
         this.cognome = cognome;
+        this.username = username;
+        this.password = password;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {return id;}
+    public String getNome() {return nome;}
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setNome(String nome) {this.nome = nome;}
+    public String getCognome() {return cognome;}
 
-    public String getCognome() { return cognome; }
-    public void setCognome(String cognome) { this.cognome = cognome; }
+    public void setCognome(String cognome) {this.cognome = cognome;}
+    public String getUsername() {return username;}
 
-    public Tessera getTessera() { return tessera; }
+    public void setUsername(String username) {this.username = username;}
+    public String getPassword() {return password;}
 
-    public void setTessera(Tessera tessera) {
-        this.tessera = tessera;
-        if (tessera != null && tessera.getUtente() != this) {
-            tessera.setUtente(this);
-        }
-    }
+    public void setPassword(String password) {this.password = password;}
 
     @Override
     public String toString() {
@@ -46,6 +51,8 @@ public abstract class Utente {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

@@ -18,31 +18,33 @@ public class MainMarcello {
         try {
             em.getTransaction().begin();
 
-            // Creo mezzi
+            // Mezzi
             Mezzo bus1 = new Mezzo(TipoMezzo.AUTOBUS, 50, StatoMezzo.IN_SERVIZIO);
             Mezzo tram1 = new Mezzo(TipoMezzo.TRAM, 80, StatoMezzo.IN_SERVIZIO);
             em.persist(bus1);
             em.persist(tram1);
 
-            // Creo tratte
+            // Tratte
             Tratta trattaA = new Tratta("Napoli", "Roma", 150);
             Tratta trattaB = new Tratta("Milano", "Torino", 150);
             em.persist(trattaA);
             em.persist(trattaB);
 
-            // Creo percorrenze legando mezzi e tratte
+            // Percorrenze
             PercorrenzaTratta p1 = new PercorrenzaTratta(bus1, trattaA, LocalDate.now(), 155);
             PercorrenzaTratta p2 = new PercorrenzaTratta(tram1, trattaB, LocalDate.now(), 145);
-            bus1.addPercorrenzaTratta(p1); trattaA.addPercorrenza(p1);
-            tram1.addPercorrenzaTratta(p2); trattaB.addPercorrenza(p2);
+            bus1.addPercorrenzaTratta(p1);
+            trattaA.addPercorrenza(p1);
+            tram1.addPercorrenzaTratta(p2);
+            trattaB.addPercorrenza(p2);
             em.persist(p1);
             em.persist(p2);
 
-            // Creo utente
-            UtenteNormale utente1 = new UtenteNormale("Mario", "Rossi");
+            // Utente
+            UtenteNormale utente1 = new UtenteNormale("Mario", "Rossi", "mario", "1234");
             em.persist(utente1);
 
-            // Creo punti vendita
+            // Punti vendita
             RivenditoreAutorizzato rivenditore1 = new RivenditoreAutorizzato("Bar Mario", "Via Roma 10");
             DistributoreAutomatizzato distributore1 = new DistributoreAutomatizzato("Distributore A1", "Stazione Centrale", true);
             em.persist(rivenditore1);
@@ -63,8 +65,7 @@ public class MainMarcello {
                 scanner.nextLine();
 
                 switch (scelta) {
-                    case 1:
-                        // Seleziona tratta
+                    case 1: {
                         List<Tratta> tratte = em.createQuery("SELECT t FROM Tratta t", Tratta.class).getResultList();
                         if (tratte.isEmpty()) {
                             System.out.println("Nessuna tratta disponibile.");
@@ -82,7 +83,6 @@ public class MainMarcello {
                         }
                         Tratta trattaSelezionata = tratte.get(idxTratta);
 
-                        // Mezzi associati alla tratta
                         List<Mezzo> mezzi = em.createQuery(
                                         "SELECT DISTINCT p.mezzo FROM PercorrenzaTratta p WHERE p.tratta = :tratta", Mezzo.class)
                                 .setParameter("tratta", trattaSelezionata)
@@ -103,7 +103,6 @@ public class MainMarcello {
                         }
                         Mezzo mezzoSelezionato = mezzi.get(idxMezzo);
 
-                        // Scegli punto vendita
                         List<PuntoVendita> puntiVendita = em.createQuery("SELECT p FROM PuntoVendita p", PuntoVendita.class).getResultList();
                         if (puntiVendita.isEmpty()) {
                             System.out.println("Nessun punto vendita disponibile.");
@@ -122,8 +121,9 @@ public class MainMarcello {
                         }
                         PuntoVendita puntoVenditaSelezionato = puntiVendita.get(idxPv);
 
-                        // Prendo utente fisso (potresti implementare login per estendere)
-                        Utente utente = em.createQuery("SELECT u FROM Utente u", Utente.class).setMaxResults(1).getSingleResult();
+                        Utente utente = em.createQuery("SELECT u FROM Utente u WHERE u.username = :username", Utente.class)
+                                .setParameter("username", "mario")
+                                .getSingleResult();
 
                         em.getTransaction().begin();
                         Biglietto biglietto = Biglietto.creaBiglietto(mezzoSelezionato, utente, puntoVenditaSelezionato);
@@ -132,12 +132,16 @@ public class MainMarcello {
 
                         System.out.println("Biglietto creato con codice: " + biglietto.getCodice());
                         break;
+                    }
 
-                    case 2:
-                        // Mostra biglietti non ancora validati dell'utente
+                    case 2: {
+                        Utente utente = em.createQuery("SELECT u FROM Utente u WHERE u.username = :username", Utente.class)
+                                .setParameter("username", "mario")
+                                .getSingleResult();
+
                         List<Biglietto> bigliettiNonValidati = em.createQuery(
                                         "SELECT b FROM Biglietto b WHERE b.utente = :utente AND b.validato = false", Biglietto.class)
-                                .setParameter("utente", em.createQuery("SELECT u FROM Utente u", Utente.class).setMaxResults(1).getSingleResult())
+                                .setParameter("utente", utente)
                                 .getResultList();
 
                         if (bigliettiNonValidati.isEmpty()) {
@@ -148,7 +152,7 @@ public class MainMarcello {
                         System.out.println("Seleziona il biglietto da validare:");
                         for (int i = 0; i < bigliettiNonValidati.size(); i++) {
                             Biglietto b = bigliettiNonValidati.get(i);
-                            System.out.printf("%d) Codice: %s, Mezzo: %s, Data emissione: %s\n",
+                            System.out.printf("%d) Codice: %s, Mezzo: %s, Data: %s\n",
                                     i + 1, b.getCodice(), b.getMezzoValidato(), b.getDataEmissione());
                         }
                         int idxBiglietto = scanner.nextInt() - 1;
@@ -157,24 +161,24 @@ public class MainMarcello {
                             System.out.println("Biglietto non valido.");
                             break;
                         }
-                        Biglietto bigliettoDaValidare = bigliettiNonValidati.get(idxBiglietto);
+                        Biglietto daValidare = bigliettiNonValidati.get(idxBiglietto);
 
                         em.getTransaction().begin();
-                        Biglietto.validaBiglietto(bigliettoDaValidare);
-                        em.merge(bigliettoDaValidare);
+                        Biglietto.validaBiglietto(daValidare);
+                        em.merge(daValidare);
                         em.getTransaction().commit();
 
-                        System.out.println("Biglietto validato il: " + bigliettoDaValidare.getDataValidazione());
+                        System.out.println("Biglietto validato in data: " + daValidare.getDataValidazione());
                         break;
+                    }
 
-                    case 3:
-                        // Statistiche biglietti validati per mezzo (ultimo mese)
+                    case 3: {
                         List<Mezzo> tuttiMezzi = em.createQuery("SELECT m FROM Mezzo m", Mezzo.class).getResultList();
                         if (tuttiMezzi.isEmpty()) {
                             System.out.println("Nessun mezzo presente.");
                             break;
                         }
-                        System.out.println("Seleziona un mezzo per vedere le statistiche:");
+                        System.out.println("Seleziona un mezzo:");
                         for (int i = 0; i < tuttiMezzi.size(); i++) {
                             System.out.printf("%d) %s\n", i + 1, tuttiMezzi.get(i));
                         }
@@ -186,19 +190,20 @@ public class MainMarcello {
                         }
                         Mezzo mezzoStat = tuttiMezzi.get(idxM);
 
-                        LocalDateTime fine = LocalDateTime.now();
-                        LocalDateTime inizio = fine.minus(1, ChronoUnit.MONTHS);
+                        LocalDateTime now = LocalDateTime.now();
+                        LocalDateTime unMeseFa = now.minus(1, ChronoUnit.MONTHS);
 
-                        Long countValidati = em.createQuery(
-                                        "SELECT COUNT(b) FROM Biglietto b WHERE b.mezzoValidato = :mezzo " +
-                                                "AND b.validato = true AND b.dataValidazione BETWEEN :inizio AND :fine", Long.class)
+                        Long numero = em.createQuery(
+                                        "SELECT COUNT(b) FROM Biglietto b WHERE b.mezzoValidato = :mezzo AND b.validato = true AND b.dataValidazione BETWEEN :inizio AND :fine",
+                                        Long.class)
                                 .setParameter("mezzo", mezzoStat)
-                                .setParameter("inizio", inizio)
-                                .setParameter("fine", fine)
+                                .setParameter("inizio", unMeseFa)
+                                .setParameter("fine", now)
                                 .getSingleResult();
 
-                        System.out.println("Biglietti validati su " + mezzoStat + " nell'ultimo mese: " + countValidati);
+                        System.out.println("Biglietti validati su " + mezzoStat + " nell'ultimo mese: " + numero);
                         break;
+                    }
 
                     case 0:
                         running = false;
@@ -206,13 +211,13 @@ public class MainMarcello {
                         break;
 
                     default:
-                        System.out.println("Opzione non valida, riprova.");
+                        System.out.println("Opzione non valida.");
                 }
             }
+
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             e.printStackTrace();
-            if (em.getTransaction().isActive())
-                em.getTransaction().rollback();
         } finally {
             em.close();
             emf.close();
