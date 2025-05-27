@@ -14,10 +14,12 @@ public class BigliettoDao {
         em.getTransaction().begin();
         em.persist(biglietto);
         em.getTransaction().commit();
+        
     }
 
     public Biglietto findById(Long id) {
         return em.find(Biglietto.class, id);
     }
 }
+
 
