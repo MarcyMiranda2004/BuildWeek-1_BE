@@ -3,7 +3,7 @@ package entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "titoli_viaggio")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TitoloViaggio {
     @Id

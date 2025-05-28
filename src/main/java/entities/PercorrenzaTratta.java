@@ -3,7 +3,7 @@ package entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "percorrenza_tratte")
 public class PercorrenzaTratta {
 
     @Id

@@ -3,7 +3,7 @@ package entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Utente")
+@Table(name = "utenti")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utente {
 

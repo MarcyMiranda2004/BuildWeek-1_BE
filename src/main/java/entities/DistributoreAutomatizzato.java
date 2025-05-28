@@ -3,7 +3,7 @@ package entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
-@Entity
+@Entity(name = "distributori_autorizzati")
 public class DistributoreAutomatizzato extends PuntoVendita {
 
     @Column(name = "attivo", nullable = false)

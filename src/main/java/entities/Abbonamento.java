@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "abbonamenti")
 public class Abbonamento extends TitoloViaggio {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

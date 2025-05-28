@@ -7,7 +7,7 @@ import jakarta.persistence.CascadeType;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "utenti_normali")
 public class UtenteNormale extends Utente {
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -20,7 +20,6 @@ public class UtenteNormale extends Utente {
     }
 
     public List<Abbonamento> getAbbonamenti() { return abbonamenti; }
-
     public void setAbbonamenti(List<Abbonamento> abbonamenti) { this.abbonamenti = abbonamenti; }
 
     public void addAbbonamento(Abbonamento abbonamento) {

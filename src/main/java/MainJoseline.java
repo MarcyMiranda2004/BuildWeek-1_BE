@@ -49,7 +49,7 @@ public class MainJoseline {
                     String password = scanner.nextLine();
 
                     UtenteNormale utenteNormale = new UtenteNormale(nome, cognome, user, password);
-                    utenteDao.save(utenteNormale);  // Salva anche la tessera automaticamente
+                    utenteDao.save(utenteNormale);
 
                     System.out.println("Utente e Tessera creati con successo.");
                 }

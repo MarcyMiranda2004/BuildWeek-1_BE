@@ -21,7 +21,6 @@ public class BigliettoDao {
         return em.find(Biglietto.class, id);
     }
 
-    // Numero di biglietti vidimati: su un particolare mezzo(singolo mezzo), in un determinato periodo di tempo
 }
 
 
