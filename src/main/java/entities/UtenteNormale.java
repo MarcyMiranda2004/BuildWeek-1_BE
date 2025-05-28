@@ -1,9 +1,9 @@
+// Classe UtenteNormale aggiornata
 package entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +15,8 @@ public class UtenteNormale extends Utente {
 
     public UtenteNormale() {}
 
-    public UtenteNormale(String nome, String cognome) {
-        super(nome, cognome);
+    public UtenteNormale(String nome, String cognome, String username, String password) {
+        super(nome, cognome, username, password);
     }
 
     public List<Abbonamento> getAbbonamenti() { return abbonamenti; }

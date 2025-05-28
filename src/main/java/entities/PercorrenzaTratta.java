@@ -26,8 +26,7 @@ public class PercorrenzaTratta {
 
     public PercorrenzaTratta() {}
 
-    public PercorrenzaTratta(Long id, Mezzo mezzo, Tratta tratta, LocalDate data, int tempoEffettivoMinuti) {
-        this.id = id;
+    public PercorrenzaTratta(Mezzo mezzo, Tratta tratta, LocalDate data, int tempoEffettivoMinuti) {
         this.mezzo = mezzo;
         this.tratta = tratta;
         this.data = data;
