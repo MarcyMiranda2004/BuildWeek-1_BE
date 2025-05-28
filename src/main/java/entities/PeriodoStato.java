@@ -50,7 +50,7 @@ public class PeriodoStato {
     public StatoMezzo getStato() { return stato; }
     public void setStato(StatoMezzo stato) { this.stato = stato; }
 
-    @Override
+    /*@Override
     public String toString() {
         return "PeriodoStato{" +
                 "id=" + id +
@@ -58,6 +58,16 @@ public class PeriodoStato {
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
                 ", stato=" + stato +
+                '}';
+    }*/
+    @Override
+    public String toString() {
+        return "PeriodoStato{" +
+                "Il mezzo con id " + id +
+
+                " dal " + dataInizio +
+                " al " + dataFine +
+                " era in stato di: " + stato +
                 '}';
     }
 }

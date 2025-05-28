@@ -1,8 +1,14 @@
 package dao;
 
 import entities.Mezzo;
+import entities.PeriodoStato;
 import entities.Tratta;
 import jakarta.persistence.EntityManager;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MezzoDao {
     private EntityManager em;
@@ -21,7 +27,26 @@ public class MezzoDao {
         return em.find(Mezzo.class, id);
     }
 
-    // Periodo di servizio e periodo di manutenzione di ogni mezzo
+    // Periodo di servizio e periodo di manutenzione di ogni mezzo: il metodo mi ritornerà una lista di oggetti periodoStato,
+    // passandogli un mezzo specifico e un intervallo di tempo
+    public List<PeriodoStato> verificaStatoMezzo(Mezzo mezzo, LocalDateTime inizio, LocalDateTime fine) {
+        List<PeriodoStato> statiNelPeriodo = new ArrayList<>(); //Lista vuota che andrà a contenere i vari periodi presenti nell'intervallo indicato
+
+        //Ciclo i periodoStato di quel mezzo specifico
+        for (PeriodoStato periodo : mezzo.getStoricoStati()) {
+            LocalDateTime start = periodo.getDataInizio();
+            LocalDateTime end = periodo.getDataFine() != null ? periodo.getDataFine() : LocalDateTime.now();
+
+            // Verifica se i periodoStato si sovrappongono all'intervallo che l'utente inserirà
+            if (!start.isAfter(fine) && !end.isBefore(inizio)) {
+                statiNelPeriodo.add(periodo);
+            }
+        }
+        return statiNelPeriodo;
+
+
+    }
+
     // Numero di volte che un mezzo percorre una tratta
     public long countPercorrenzeByMezzoAndTratta(Mezzo mezzo, Tratta tratta) {
         return em.createQuery(
