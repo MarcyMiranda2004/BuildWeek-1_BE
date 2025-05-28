@@ -23,20 +23,34 @@ public class AbbonamentoDao {
         return em.find(Abbonamento.class, id);
     }
 
-    public boolean isAbbonamentoValido(String numeroTessera) {
-        try {
-            UUID codiceUUID = UUID.fromString(numeroTessera);
-            TypedQuery<Long> query = em.createQuery(
-                    "SELECT COUNT(a) FROM Abbonamento a JOIN a.tessera t " +
-                            "WHERE t.codice = :codice AND CURRENT_DATE BETWEEN a.validoDa AND a.validoA",
-                    Long.class
-            );
-            query.setParameter("codice", codiceUUID);
-            Long result = query.getSingleResult();
-            return result > 0;
-        } catch (IllegalArgumentException e) {
-            return false; // Gestione del caso in cui il numeroTessera non sia un UUID valido
-        }
+//    public boolean isAbbonamentoValido(String numeroTessera) {
+//        try {
+//            UUID codiceUUID = UUID.fromString(numeroTessera);
+//            TypedQuery<Long> query = em.createQuery(
+//                    "SELECT COUNT(a) FROM Abbonamento a JOIN a.tessera t " +
+//                            "WHERE t.codice = :codice AND CURRENT_DATE BETWEEN a.validoDa AND a.validoA",
+//                    Long.class
+//            );
+//            query.setParameter("codice", codiceUUID);
+//            Long result = query.getSingleResult();
+//            return result > 0;
+//        } catch (IllegalArgumentException e) {
+//            return false; // Gestione del caso in cui il numeroTessera non sia un UUID valido
+//        }
+//    }
+public boolean isAbbonamentoValido(String codiceAbbonamento) {
+    try {
+        TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(a) FROM Abbonamento a " +
+                        "WHERE a.codice = :codice AND CURRENT_DATE BETWEEN a.validoDa AND a.validoA",
+                Long.class
+        );
+        query.setParameter("codice", codiceAbbonamento);
+        Long result = query.getSingleResult();
+        return result > 0;
+    } catch (Exception e) {
+        return false; // Gestione del caso in cui il codice non sia valido o si verifichi un errore
     }
+}
 }
 

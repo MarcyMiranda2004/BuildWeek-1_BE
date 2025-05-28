@@ -5,6 +5,7 @@ import enums.TipoMezzo;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 public class Abbonamento extends TitoloViaggio {
@@ -50,6 +51,29 @@ public class Abbonamento extends TitoloViaggio {
 
     public LocalDate getValidoA() {return validoA;}
     public void setValidoA(LocalDate validoA) {this.validoA = validoA;}
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
+    }
+
+    // Metodo creazione dell abbonamento
+    public  static Abbonamento creaAbbonamento(Utente utente,Periodicita periodicita,TipoMezzo tipoMezzo,PuntoVendita puntoVendita,Tessera tessera){
+        Abbonamento abbonamento= new Abbonamento();
+        abbonamento.setCodice("AB-"+ UUID.randomUUID());
+        abbonamento.setDataEmissione(LocalDate.now());
+        abbonamento.setPuntoVendita(puntoVendita);
+        abbonamento.setUtente(utente);
+        abbonamento.setPeriodicita(periodicita);
+        abbonamento.setTipo(tipoMezzo);
+        abbonamento.setValidoDa(LocalDate.now());
+        abbonamento.setValidoA(abbonamento.getValidoDa().plusYears(1));
+        abbonamento.setTessera(tessera);
+        return abbonamento;
+    }
 
     @Override
     public String toString() {
