@@ -20,7 +20,8 @@ public class MezzoDao {
         return em.find(Mezzo.class, id);
     }
 
-    // Periodo di servizio e periodo di manutenzione di ogni mezzo
-    // Numero di volte che un mezzo percorre una tratta
+
 }
 
+// Periodo di servizio e periodo di manutenzione di ogni mezzo
+// Numero di volte che un mezzo percorre una tratta

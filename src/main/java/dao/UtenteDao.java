@@ -1,8 +1,10 @@
 package dao;
 
+import entities.Tessera;
 import entities.Utente;
 import jakarta.persistence.EntityManager;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class UtenteDao {
@@ -14,8 +16,20 @@ public class UtenteDao {
 
     public void save(Utente utente) {
         em.getTransaction().begin();
+
         em.persist(utente);
+
+        // Creazione automatica della tessera associata
+        Tessera tessera = new Tessera(
+                LocalDate.now(),
+                LocalDate.now().plusYears(1),
+                utente
+        );
+        em.persist(tessera);
+
         em.getTransaction().commit();
+
+        System.out.println("Utente e tessera creati. Tessera ID: " + tessera.getId());
     }
 
     public Utente findById(Long id) {
@@ -32,4 +46,3 @@ public class UtenteDao {
         em.getTransaction().commit();
     }
 }
-

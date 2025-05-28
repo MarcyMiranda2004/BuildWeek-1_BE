@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Entity
 public class Abbonamento extends TitoloViaggio {
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Periodicita periodicita;
@@ -22,9 +23,15 @@ public class Abbonamento extends TitoloViaggio {
     @Column(name = "valido_a", nullable = false)
     private LocalDate validoA;
 
+    // Campo mancante per il mapping bidirezionale
+    @ManyToOne
+    @JoinColumn(name = "tessera_id")
+    private Tessera tessera;
+
     public Abbonamento() {}
 
-    public Abbonamento(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente, Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA) {
+    public Abbonamento(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente,
+                       Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA) {
         super(codice, dataEmissione, puntoVendita, utente);
         this.periodicita = periodicita;
         this.tipo = tipo;
@@ -32,17 +39,25 @@ public class Abbonamento extends TitoloViaggio {
         this.validoA = validoA;
     }
 
-    public Periodicita getPeriodicita() {return periodicita;}
-    public void setPeriodicita(Periodicita periodicita) {this.periodicita = periodicita;}
+    public Periodicita getPeriodicita() { return periodicita; }
+    public void setPeriodicita(Periodicita periodicita) { this.periodicita = periodicita; }
 
-    public TipoMezzo getTipo() {return tipo;}
-    public void setTipo(TipoMezzo tipo) {this.tipo = tipo;}
+    public TipoMezzo getTipo() { return tipo; }
+    public void setTipo(TipoMezzo tipo) { this.tipo = tipo; }
 
-    public LocalDate getValidoDa() {return validoDa;}
-    public void setValidoDa(LocalDate validoDa) {this.validoDa = validoDa;}
+    public LocalDate getValidoDa() { return validoDa; }
+    public void setValidoDa(LocalDate validoDa) { this.validoDa = validoDa; }
 
-    public LocalDate getValidoA() {return validoA;}
-    public void setValidoA(LocalDate validoA) {this.validoA = validoA;}
+    public LocalDate getValidoA() { return validoA; }
+    public void setValidoA(LocalDate validoA) { this.validoA = validoA; }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
+    }
 
     @Override
     public String toString() {

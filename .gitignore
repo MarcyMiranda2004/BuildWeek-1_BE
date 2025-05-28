@@ -39,3 +39,7 @@ build/
 
 ### persistence ###
 /src/main/resources/META-INF/persistence.xml
+
+
+### persistence ###
+/src/main/resources/META-INF/persistence.xml
