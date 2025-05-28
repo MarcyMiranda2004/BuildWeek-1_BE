@@ -60,13 +60,21 @@ public class Tessera {
     public void setDataScadenza(LocalDate dataScadenza) { this.dataScadenza = dataScadenza; }
 
     public void addAbbonamento(Abbonamento abbonamento) {
-        abbonamenti.add(abbonamento); // Aggiunge un abbonamento alla lista
+        listaAbbonamenti.add(abbonamento); // Aggiunge un abbonamento alla lista
         abbonamento.setTessera(this); // Imposta questa tessera come riferimento nell’abbonamento
     }
 
     public void removeAbbonamento(Abbonamento abbonamento) {
-        abbonamenti.remove(abbonamento); // Rimuove l’abbonamento dalla lista
+        listaAbbonamenti.remove(abbonamento); // Rimuove l’abbonamento dalla lista
         abbonamento.setTessera(null); // Rimuove il riferimento a questa tessera nell’abbonamento
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     @Override

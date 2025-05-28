@@ -43,8 +43,12 @@ public class MainJoseline {
                     String nome = scanner.nextLine();
                     System.out.println("Cognome Utente:");
                     String cognome = scanner.nextLine();
+                    System.out.println("user Utente:");
+                    String user = scanner.nextLine();
+                    System.out.println("password Utente:");
+                    String password = scanner.nextLine();
 
-                    UtenteNormale utenteNormale = new UtenteNormale(nome, cognome);
+                    UtenteNormale utenteNormale = new UtenteNormale(nome, cognome, user, password);
                     utenteDao.save(utenteNormale);  // Salva anche la tessera automaticamente
 
                     System.out.println("Utente e Tessera creati con successo.");
@@ -113,7 +117,7 @@ public class MainJoseline {
 
                     Abbonamento abbonamento = new Abbonamento(
                             codice, dataEmissione, puntoVendita, tessera.getUtente(),
-                            periodicita, tipoMezzo, validoDa, validoA
+                            periodicita, tipoMezzo, validoDa, validoA, tessera
                     );
                     tessera.addAbbonamento(abbonamento);
 
@@ -126,18 +130,15 @@ public class MainJoseline {
                 }
 
                 case 6 -> {
-                    UtenteNormale u1 = new UtenteNormale("Topo", "Gigio");
+                    UtenteNormale u1 = new UtenteNormale("Topo", "Gigio","user1","pass1");
+                    UtenteNormale u2 = new UtenteNormale("Fabio", "Verdi","user2", "pass2");
+                    utenteDao.save(u1);
+                    utenteDao.save(u2);
+
                     Tessera t1 = new Tessera(LocalDate.now(), LocalDate.now().plusYears(1), u1);
-                    u1.setTessera(t1);
-
-                    UtenteNormale u2 = new UtenteNormale("Fabio", "Verdi");
+                    t1.setUtente(u1);
                     Tessera t2 = new Tessera(LocalDate.now().minusYears(2), LocalDate.now().minusDays(30), u2);
-                    u2.setTessera(t2);
-
-                    em.getTransaction().begin();
-                    em.persist(u1);
-                    em.persist(u2);
-                    em.getTransaction().commit();
+                    t2.setUtente(u2);
 
                     System.out.println("Tessera valida creata con ID: " + t1.getId());
                     System.out.println("Tessera scaduta creata con ID: " + t2.getId());
