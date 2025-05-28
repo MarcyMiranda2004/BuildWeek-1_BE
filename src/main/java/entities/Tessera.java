@@ -2,6 +2,8 @@ package entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +26,9 @@ public class Tessera {
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
+    @OneToMany(mappedBy = "tessera")
+    private List<Abbonamento> listaAbbonamenti;
+
     public Tessera() {
         this.codice = UUID.randomUUID();
     }
@@ -33,6 +38,15 @@ public class Tessera {
         this.dataEmissione = dataEmissione;
         this.dataScadenza = dataScadenza;
         this.utente = utente;
+        this.listaAbbonamenti = new ArrayList<>();
+    }
+
+    public List<Abbonamento> getListaAbbonamenti() {
+        return listaAbbonamenti;
+    }
+
+    public void setListaAbbonamenti(List<Abbonamento> listaAbbonamenti) {
+        this.listaAbbonamenti = listaAbbonamenti;
     }
 
     public Long getId() { return id; }

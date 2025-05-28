@@ -22,14 +22,21 @@ public class Abbonamento extends TitoloViaggio {
     @Column(name = "valido_a", nullable = false)
     private LocalDate validoA;
 
+    // relazione tra abbonamento e tessera
+    @ManyToOne
+    @JoinColumn(name = "tessera_id")
+    private Tessera tessera;
+
+
     public Abbonamento() {}
 
-    public Abbonamento(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente, Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA) {
+    public Abbonamento(String codice, LocalDate dataEmissione, PuntoVendita puntoVendita, Utente utente, Periodicita periodicita, TipoMezzo tipo, LocalDate validoDa, LocalDate validoA,Tessera tessera) {
         super(codice, dataEmissione, puntoVendita, utente);
         this.periodicita = periodicita;
         this.tipo = tipo;
         this.validoDa = validoDa;
         this.validoA = validoA;
+        this.tessera=tessera;
     }
 
     public Periodicita getPeriodicita() {return periodicita;}
