@@ -26,35 +26,61 @@ public class CadoMalatoMain {
         Scanner scanner= new Scanner(System.in);
 
         try {
-            em.getTransaction().begin();
+//            em.getTransaction().begin();
 
             // Creazione di un utente
-            UtenteNormale utente = new UtenteNormale("Mario", "Rossi", "mario", "password");
+            UtenteNormale utente = new UtenteNormale("Mario1", "Rossi", "mario", "password");
 
-            em.persist(utente);
+//            em.persist(utente);
+            utenteDao.save(utente);
+            Tessera tesseraEsistente = em.createQuery(
+                            "SELECT t FROM Tessera t WHERE t.utente.id = :utenteId", Tessera.class)
+                    .setParameter("utenteId", utente.getId())
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
 
+            if (tesseraEsistente != null) {
+                System.out.println("L'utente ha già una tessera associata: " + tesseraEsistente.getCodice());
+            } else {
+                // Creazione di una nuova tessera
+                Tessera tesseraCreata = new Tessera(LocalDate.now(), LocalDate.now().plusYears(1), utente);
+                tesseraDao.save(tesseraCreata);
+                System.out.println("Nuova tessera creata con codice: " + tesseraCreata.getCodice());
+            }
             // Creazione di una tessera
-            Tessera tesseraCreata = new Tessera(LocalDate.now(), LocalDate.now().plusYears(1), utente); // Rinomina la variabile per chiarezza
-            em.persist(tesseraCreata);
-            em.persist(tesseraCreata);
+//            Tessera tesseraCreata = new Tessera(LocalDate.now(), LocalDate.now().plusYears(1), utente); // Rinomina la variabile per chiarezza
+//            em.persist(tesseraCreata);
+//            tesseraDao.save(tesseraCreata);
 
             // creazione di un punto vendita
             RivenditoreAutorizzato rivenditore1 = new RivenditoreAutorizzato("Bar Mario", "Via Roma 10");
-            em.persist(rivenditore1);
+//            em.persist(rivenditore1);
+            puntoVenditaDao.save(rivenditore1);
 
 
-            // creazione di un abbonamento
-            Abbonamento abbonamento1= new Abbonamento(UUID.randomUUID().toString(),LocalDate.now(),rivenditore1,utente, Periodicita.MENSILE, TipoMezzo.TRAM,LocalDate.now(),
-                    LocalDate.now().plusYears(1),tesseraCreata);
-            // Aggiorna la lista di abbonamenti della tessera
-            tesseraCreata.getListaAbbonamenti().add(abbonamento1);
-            em.persist(abbonamento1);
+//            // creazione di un abbonamento
+//            Abbonamento abbonamento1= new Abbonamento(UUID.randomUUID().toString(),LocalDate.now(),rivenditore1,utente, Periodicita.MENSILE, TipoMezzo.TRAM,LocalDate.now(),
+//                    LocalDate.now().plusYears(1),tesseraCreata);
+//            // Aggiorna la lista di abbonamenti della tessera
+//            tesseraCreata.getListaAbbonamenti().add(abbonamento1);
+//            em.persist(abbonamento1);
+//            abbonamentoDao.save(abbonamento1);
+            Abbonamento abbonamento1 = new Abbonamento(UUID.randomUUID().toString(), LocalDate.now(), rivenditore1, utente, Periodicita.MENSILE, TipoMezzo.TRAM, LocalDate.now(),
+                    LocalDate.now().plusYears(1), tesseraEsistente != null ? tesseraEsistente : null);
+            if (tesseraEsistente != null) {
+                tesseraEsistente.getListaAbbonamenti().add(abbonamento1);
+                abbonamentoDao.save(abbonamento1);
+                tesseraDao.save(tesseraEsistente);
+            }
+
+            System.out.println(tesseraEsistente != null ? tesseraEsistente.getListaAbbonamenti() : "Nessuna tessera associata.");
 
 
 
-            em.getTransaction().commit();
+//            em.getTransaction().commit();
 
-            System.out.println(tesseraCreata.getListaAbbonamenti());
+//            System.out.println(tesseraCreata.getListaAbbonamenti());
             boolean running = true;
 
             while (running){
