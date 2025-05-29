@@ -19,6 +19,8 @@ public class MainGestionale {
         TitoloViaggioDao titoloViaggioDao = new TitoloViaggioDao(em);
         UtenteDao utenteDao = new UtenteDao(em);
 
+        DataTest.inserisciDatiDiTest(em);
+
         boolean running = true;
 
         try {
@@ -41,21 +43,103 @@ public class MainGestionale {
                         Utente utenteLoggato = null;
 
                         for (Utente u : utenti) {
-                            if (u instanceof UtenteNormale un &&
-                                    un.getUsername().equals(usernameLogin) &&
-                                    un.getPassword().equals(passwordLogin)) {
+                            if (u.getUsername().equals(usernameLogin) && u.getPassword().equals(passwordLogin)) {
                                 accessoConsentito = true;
-                                utenteLoggato = un;
+                                utenteLoggato = u;
                                 break;
                             }
                         }
 
                         if (accessoConsentito) {
                             System.out.println("Login effettuato con successo. Benvenuto " + utenteLoggato.getNome() + "!");
-                            // eventuale sotto-menu utente loggato
+
+                            if (utenteLoggato instanceof Amministratore) {
+                                boolean adminMenu = true;
+                                while (adminMenu) {
+                                    System.out.println("\n--- Menu Amministratore ---");
+                                    System.out.println("1. Visualizza tutti gli utenti");
+                                    System.out.println("2. Visualizza tutte le tessere");
+                                    System.out.println("3. Visualizza tutti i mezzi e i loro stati");
+                                    System.out.println("4. Visualizza le tratte con i mezzi affidati");
+                                    System.out.println("5. Visualizza biglietti e abbonamenti validati per singolo mezzo");
+                                    System.out.println("6. Visualizza il tempo di percorrenza medio per tratta");
+                                    System.out.println("7. Visualizza gli stati dei mezzi");
+                                    System.out.println("8. Visualizza biglietti e abbonamenti venduti in un intervallo di tempo presso");
+                                    System.out.println("9. Visualizza quanti biglietti e abbonamenti sono stai emessi in totale");
+                                    System.out.println("10. Ottieni un biglietti o un abbonamenti");
+                                    System.out.println("11. Valida un biglietti o un abbonamenti");
+                                    System.out.println("12. Rinnova una tessera o un abbonamenti scaduto o in scadenza");
+                                    System.out.println("0. Logout");
+
+                                    int sceltaAdmin = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    switch (sceltaAdmin) {
+                                        case 1 -> {
+                                            utenti = utenteDao.findAll();
+                                            utenti.forEach(System.out::println);
+                                        }
+
+                                        case 2 -> {
+                                            List<Tessera> tessere = tesseraDao.findAll();
+                                            tessere.forEach(System.out::println);
+                                        }
+
+                                        case 3 -> {
+                                            List<Mezzo> mezzi = em.createQuery("SELECT m FROM mezzi m", Mezzo.class).getResultList();
+                                            mezzi.forEach(System.out::println);
+                                        }
+
+                                        case 4 -> {
+                                            List<PercorrenzaTratta> tratte = em.createQuery("SELECT p FROM percorrenza_tratte p", PercorrenzaTratta.class).getResultList();
+                                            tratte.forEach(System.out::println);
+                                        }
+                                        case 0 -> {
+                                            adminMenu = false;
+                                            System.out.println("Logout effettuato.");
+                                        }
+                                        default -> System.out.println("Scelta non valida.");
+                                    }
+                                }
+
+                            } else if (utenteLoggato instanceof UtenteNormale) {
+                                boolean userMenu = true;
+                                while (userMenu) {
+                                    System.out.println("\n--- Menu Utente ---");
+                                    System.out.println("1. Visualizza il tuo Profilo");
+                                    System.out.println("2. Visualizza la tua Tesserta");
+                                    System.out.println("4. Visualizza le tratte con i mezzi affidati");
+                                    System.out.println("5. Ottieni un Biglietto o un Abbonamento");
+                                    System.out.println("6. Valida un Biglietto o un Abbonamento");
+                                    System.out.println("7. Rinnova una Tessera o un Abbonamento scaduto o in Scadenza");
+                                    System.out.println("0. Logout");
+
+                                    int sceltaUtente = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    switch (sceltaUtente) {
+                                        case 1 -> {
+                                            try {
+                                                Tessera tessera = tesseraDao.findByUtenteId(utenteLoggato.getId());
+                                                System.out.println(tessera);
+                                            } catch (Exception e) {
+                                                System.out.println("Tessera non trovata.");
+                                            }
+                                        }
+                                        case 0 -> {
+                                            userMenu = false;
+                                            System.out.println("Logout effettuato.");
+                                        }
+                                        default -> System.out.println("Scelta non valida.");
+                                    }
+                                }
+                            }
+
                         } else {
                             System.out.println("Username o password errati.");
                         }
+
+
                         break;
                     }
 

@@ -5,6 +5,7 @@ import entities.Tessera;
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TesseraDao {
 
@@ -31,6 +32,11 @@ public class TesseraDao {
                 .setParameter("uid", utenteId)
                 .getSingleResult();
     }
+
+    public List<Tessera> findAll() {
+        return em.createQuery("SELECT t FROM tessere t", Tessera.class).getResultList();
+    }
+
 
     public void rinnovaTessera(Long id) {
         em.getTransaction().begin();

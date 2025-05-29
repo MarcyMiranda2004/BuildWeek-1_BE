@@ -50,12 +50,16 @@ public class PercorrenzaTratta {
 
     @Override
     public String toString() {
+        String tipoMezzo = (mezzo != null && mezzo.getTipo() != null) ? mezzo.getTipo().name() : "N/A";
+        String trattaStr = (tratta != null) ? tratta.getZonaPartenza() + " - " + tratta.getCapolinea() : "N/A";
         return "PercorrenzaTratta{" +
                 "id=" + id +
-                ", mezzoId=" + (mezzo != null ? mezzo.getId() : null) +
-                ", trattaId=" + (tratta != null ? tratta.getId() : null) +
+                ", tipoMezzo=" + tipoMezzo +
+                ", tratta=" + trattaStr +
                 ", data=" + data +
                 ", tempoEffettivoMinuti=" + tempoEffettivoMinuti +
                 '}';
     }
+
+
 }
