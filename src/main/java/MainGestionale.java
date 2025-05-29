@@ -18,6 +18,11 @@ public class MainGestionale {
         TesseraDao tesseraDao = new TesseraDao(em);
         TitoloViaggioDao titoloViaggioDao = new TitoloViaggioDao(em);
         UtenteDao utenteDao = new UtenteDao(em);
+        MezzoDao mezzoDao = new MezzoDao(em);
+        PercorrenzaTrattaDao percorrenzaTrattaDao = new PercorrenzaTrattaDao(em);
+        BigliettoDao bigliettoDao = new BigliettoDao(em);
+
+        ArchivioGestionale archivioGestionale = new ArchivioGestionale(em, utenteDao, tesseraDao, titoloViaggioDao, mezzoDao, percorrenzaTrattaDao, bigliettoDao);
 
         DataTest.inserisciDatiDiTest(em);
 
@@ -25,32 +30,34 @@ public class MainGestionale {
 
         try {
             while (running) {
-                System.out.println("Benvenuto! Seleziona un'opzione:");
-                System.out.println("\n1. Accedi\n2. Registrati\n0. Esci");
-                System.out.println("Scegli un Opzione: ");
-                int scelta = scanner.nextInt();
-                scanner.nextLine();
+                System.out.println("\nBenvenuto! Seleziona un'opzione:");
+                System.out.println("1. Accedi");
+                System.out.println("2. Registrati");
+                System.out.println("0. Esci");
+                System.out.print("Scegli un'opzione: ");
+
+                int scelta;
+                try {
+                    scelta = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Input non valido, inserisci un numero.");
+                    continue;
+                }
 
                 switch (scelta) {
-                    case 1: {
-                        System.out.println("Inserisci username:");
+                    case 1 -> {
+                        System.out.print("Inserisci username: ");
                         String usernameLogin = scanner.nextLine();
-                        System.out.println("Inserisci password:");
+                        System.out.print("Inserisci password: ");
                         String passwordLogin = scanner.nextLine();
 
                         List<Utente> utenti = utenteDao.findAll();
-                        boolean accessoConsentito = false;
-                        Utente utenteLoggato = null;
+                        Utente utenteLoggato = utenti.stream()
+                                .filter(u -> u.getUsername().equals(usernameLogin) && u.getPassword().equals(passwordLogin))
+                                .findFirst()
+                                .orElse(null);
 
-                        for (Utente u : utenti) {
-                            if (u.getUsername().equals(usernameLogin) && u.getPassword().equals(passwordLogin)) {
-                                accessoConsentito = true;
-                                utenteLoggato = u;
-                                break;
-                            }
-                        }
-
-                        if (accessoConsentito) {
+                        if (utenteLoggato != null) {
                             System.out.println("Login effettuato con successo. Benvenuto " + utenteLoggato.getNome() + "!");
 
                             if (utenteLoggato instanceof Amministratore) {
@@ -62,38 +69,32 @@ public class MainGestionale {
                                     System.out.println("3. Visualizza tutti i mezzi e i loro stati");
                                     System.out.println("4. Visualizza le tratte con i mezzi affidati");
                                     System.out.println("5. Visualizza biglietti e abbonamenti validati per singolo mezzo");
-                                    System.out.println("6. Visualizza il tempo di percorrenza medio per tratta");
-                                    System.out.println("7. Visualizza gli stati dei mezzi");
-                                    System.out.println("8. Visualizza biglietti e abbonamenti venduti in un intervallo di tempo presso");
-                                    System.out.println("9. Visualizza quanti biglietti e abbonamenti sono stai emessi in totale");
-                                    System.out.println("10. Ottieni un biglietti o un abbonamenti");
-                                    System.out.println("11. Valida un biglietti o un abbonamenti");
-                                    System.out.println("12. Rinnova una tessera o un abbonamenti scaduto o in scadenza");
+                                    System.out.println("6. Visualizza il tempo medio di percorrenza medio per tratta");
+                                    System.out.println("7. Visualizza statistiche vendita biglietti e abbonamenti in un intervallo di tempo");
+                                    System.out.println("8. Visualizza quante volte un mezzo ha percorso una tratta specifica");
+                                    System.out.println("9. Ottieni un biglietto o un abbonamento");
+                                    System.out.println("10. Valida un biglietto o un abbonamento");
+                                    System.out.println("11. Rinnova una tessera o un abbonamento scaduto o in scadenza");
                                     System.out.println("0. Logout");
+                                    System.out.print("Scegli un'opzione: ");
 
-                                    int sceltaAdmin = scanner.nextInt();
-                                    scanner.nextLine();
+                                    int sceltaAdmin;
+                                    try {
+                                        sceltaAdmin = Integer.parseInt(scanner.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Input non valido.");
+                                        continue;
+                                    }
 
                                     switch (sceltaAdmin) {
-                                        case 1 -> {
-                                            utenti = utenteDao.findAll();
-                                            utenti.forEach(System.out::println);
-                                        }
-
-                                        case 2 -> {
-                                            List<Tessera> tessere = tesseraDao.findAll();
-                                            tessere.forEach(System.out::println);
-                                        }
-
-                                        case 3 -> {
-                                            List<Mezzo> mezzi = em.createQuery("SELECT m FROM mezzi m", Mezzo.class).getResultList();
-                                            mezzi.forEach(System.out::println);
-                                        }
-
-                                        case 4 -> {
-                                            List<PercorrenzaTratta> tratte = em.createQuery("SELECT p FROM percorrenza_tratte p", PercorrenzaTratta.class).getResultList();
-                                            tratte.forEach(System.out::println);
-                                        }
+                                        case 1 -> archivioGestionale.visualizzaUtenti();
+                                        case 2 -> archivioGestionale.visualizzaTessere();
+                                        case 3 -> archivioGestionale.visualizzaMezziStati();
+                                        case 4 -> archivioGestionale.visualizzaTratteMezzi();
+                                        case 5 -> archivioGestionale.visualizzaBigliettiValidatiPerMezzo(scanner);
+                                        case 6 -> archivioGestionale.visualizzaTempoMedioPercorrenzaMedioTratta(scanner);
+                                        case 7 -> archivioGestionale.stampaStatistichePeriodo(titoloViaggioDao, scanner);
+                                        case 8 -> archivioGestionale.visualizzaNumeroPercorrenzeTrattaMezzo(scanner);
                                         case 0 -> {
                                             adminMenu = false;
                                             System.out.println("Logout effettuato.");
@@ -107,24 +108,28 @@ public class MainGestionale {
                                 while (userMenu) {
                                     System.out.println("\n--- Menu Utente ---");
                                     System.out.println("1. Visualizza il tuo Profilo");
-                                    System.out.println("2. Visualizza la tua Tesserta");
-                                    System.out.println("4. Visualizza le tratte con i mezzi affidati");
-                                    System.out.println("5. Ottieni un Biglietto o un Abbonamento");
-                                    System.out.println("6. Valida un Biglietto o un Abbonamento");
-                                    System.out.println("7. Rinnova una Tessera o un Abbonamento scaduto o in Scadenza");
+                                    System.out.println("2. Visualizza la tua Tessera");
+                                    System.out.println("3. Visualizza le tratte con i mezzi affidati");
+                                    System.out.println("4. Ottieni un Biglietto o un Abbonamento");
+                                    System.out.println("5. Valida un Biglietto o un Abbonamento");
+                                    System.out.println("6. Rinnova una Tessera o un Abbonamento scaduto o in scadenza");
                                     System.out.println("0. Logout");
+                                    System.out.print("Scegli un'opzione: ");
 
-                                    int sceltaUtente = scanner.nextInt();
-                                    scanner.nextLine();
+                                    int sceltaUtente;
+                                    try {
+                                        sceltaUtente = Integer.parseInt(scanner.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Input non valido.");
+                                        continue;
+                                    }
 
                                     switch (sceltaUtente) {
-                                        case 1 -> {
-                                            try {
-                                                Tessera tessera = tesseraDao.findByUtenteId(utenteLoggato.getId());
-                                                System.out.println(tessera);
-                                            } catch (Exception e) {
-                                                System.out.println("Tessera non trovata.");
-                                            }
+                                        case 1 -> System.out.println(utenteLoggato);
+                                        case 2 -> {
+                                            Tessera tessera = tesseraDao.findByUtenteId(utenteLoggato.getId());
+                                            if (tessera != null) System.out.println(tessera);
+                                            else System.out.println("Tessera non trovata.");
                                         }
                                         case 0 -> {
                                             userMenu = false;
@@ -138,45 +143,35 @@ public class MainGestionale {
                         } else {
                             System.out.println("Username o password errati.");
                         }
-
-
-                        break;
                     }
-
-                    case 2: {
-                        System.out.println("Nome:");
+                    case 2 -> {
+                        System.out.print("Nome: ");
                         String nome = scanner.nextLine();
-                        System.out.println("Cognome:");
+                        System.out.print("Cognome: ");
                         String cognome = scanner.nextLine();
-                        System.out.println("Username:");
+                        System.out.print("Username: ");
                         String user = scanner.nextLine();
-                        System.out.println("Password:");
+                        System.out.print("Password: ");
                         String password = scanner.nextLine();
 
                         UtenteNormale nuovoUtente = new UtenteNormale(nome, cognome, user, password);
                         utenteDao.save(nuovoUtente);
 
                         System.out.println("Utente registrato con successo.");
-                        break;
                     }
-
-                    case 0:
+                    case 0 -> {
                         running = false;
                         System.out.println("Arrivederci!");
-                        break;
-
-                    default:
-                        System.out.println("Scelta non valida. Riprova.");
-                        break;
+                    }
+                    default -> System.out.println("Scelta non valida. Riprova.");
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            scanner.close();
             em.close();
             emf.close();
-            scanner.close();
         }
     }
 }

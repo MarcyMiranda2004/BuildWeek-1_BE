@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity(name = "percorrenza_tratte")
+@Table(name = "percorrenza_tratte")
 public class PercorrenzaTratta {
 
     @Id
@@ -60,6 +61,5 @@ public class PercorrenzaTratta {
                 ", tempoEffettivoMinuti=" + tempoEffettivoMinuti +
                 '}';
     }
-
 
 }
