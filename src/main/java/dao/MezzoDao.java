@@ -47,7 +47,7 @@ public class MezzoDao {
     // Conta quante volte un mezzo ha percorso una tratta specifica
     public long countPercorrenzeByMezzoAndTratta(Mezzo mezzo, Tratta tratta) {
         return em.createQuery(
-                        "SELECT COUNT(p) FROM PercorrenzaTratta p WHERE p.mezzo = :mezzo AND p.tratta = :tratta", Long.class)
+                        "SELECT COUNT(p) FROM percorrenza_tratte p WHERE p.mezzo = :mezzo AND p.tratta = :tratta", Long.class)
                 .setParameter("mezzo", mezzo)
                 .setParameter("tratta", tratta)
                 .getSingleResult();

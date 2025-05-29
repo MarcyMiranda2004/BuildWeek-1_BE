@@ -24,7 +24,6 @@ public class PercorrenzaTrattaDao {
     }
 
     public List<PercorrenzaTratta> findAll() {
-        // Usa il nome dell'entità "percorrenza_tratte" esatto
         return em.createQuery("SELECT p FROM percorrenza_tratte p", PercorrenzaTratta.class)
                 .getResultList();
     }
@@ -44,5 +43,11 @@ public class PercorrenzaTrattaDao {
                 .findFirst()
                 .orElse(null);
     }
+
+    public List<Tratta> findAllTratte() {
+        return em.createQuery("SELECT DISTINCT p.tratta FROM percorrenza_tratte p", Tratta.class)
+                .getResultList();
+    }
+
 
 }

@@ -208,23 +208,37 @@ public class ArchivioGestionale {
                 return;
             }
 
-            System.out.print("Inserisci zona di partenza della tratta: ");
-            String zonaPartenza = scanner.nextLine();
-            System.out.print("Inserisci capolinea della tratta: ");
-            String capolinea = scanner.nextLine();
-
-            Tratta tratta = percorrenzaTrattaDao.findTrattaByPartenzaECapolinea(zonaPartenza, capolinea);
-            if (tratta == null) {
-                System.out.println("Tratta non trovata.");
+            List<Tratta> tratte = percorrenzaTrattaDao.findAllTratte();
+            if (tratte.isEmpty()) {
+                System.out.println("Nessuna tratta trovata nel sistema.");
                 return;
             }
 
-            long count = mezzoDao.countPercorrenzeByMezzoAndTratta(mezzo, tratta);
+            System.out.println("Seleziona una tratta tra le seguenti:");
+            for (int i = 0; i < tratte.size(); i++) {
+                Tratta t = tratte.get(i);
+                System.out.printf("%d) %s -> %s%n", i + 1, t.getZonaPartenza(), t.getCapolinea());
+            }
+
+            System.out.print("Inserisci il numero della tratta: ");
+            int scelta = Integer.parseInt(scanner.nextLine());
+
+            if (scelta < 1 || scelta > tratte.size()) {
+                System.out.println("Scelta non valida.");
+                return;
+            }
+
+            Tratta trattaSelezionata = tratte.get(scelta - 1);
+
+            long count = mezzoDao.countPercorrenzeByMezzoAndTratta(mezzo, trattaSelezionata);
             System.out.println("Il mezzo ha percorso la tratta " + count + " volte.");
 
+        } catch (NumberFormatException e) {
+            System.out.println("Errore: inserisci un numero valido.");
         } catch (Exception e) {
-            System.out.println("Errore: input non valido.");
+            System.out.println("Errore inaspettato: " + e.getMessage());
         }
     }
+
 
 }
