@@ -73,7 +73,6 @@ public class MainGestionale {
                                     System.out.println("8. Visualizza quante volte un mezzo ha percorso una tratta specifica");
                                     System.out.println("9. Ottieni un biglietto o un abbonamento");
                                     System.out.println("10. Valida un biglietto o un abbonamento");
-                                    System.out.println("11. Rinnova una tessera o un abbonamento scaduto o in scadenza");
                                     System.out.println("0. Logout");
                                     System.out.print("Scegli un'opzione: ");
 
