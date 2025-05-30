@@ -1,6 +1,5 @@
 import dao.*;
 import entities.*;
-import enums.*;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -95,6 +94,41 @@ public class MainGestionale {
                                         case 6 -> archivioGestionale.visualizzaTempoMedioPercorrenzaMedioTratta(scanner);
                                         case 7 -> archivioGestionale.stampaStatistichePeriodo(titoloViaggioDao, scanner);
                                         case 8 -> archivioGestionale.visualizzaNumeroPercorrenzeTrattaMezzo(scanner);
+                                        case 9 -> {
+                                            System.out.println("vuoi un abbonamento o un biglietto ?");
+                                            System.out.println("\n1. Biglietto\n2. Abbonamento");
+
+                                            int sceltaTitoloViaggio = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            System.out.println("Scelta inserita: " + sceltaTitoloViaggio);
+
+                                            switch (sceltaTitoloViaggio) {
+                                                case 1 -> archivioGestionale.ottieniBiglietto(scanner, em, utenteLoggato);
+                                                case 2 -> archivioGestionale.ottieniAbbonamento(scanner, em, utenteLoggato);
+                                                default -> System.out.println("Scelta titolo di viaggio non valida.");
+                                            }
+                                        }
+                                        case 10 -> {
+                                            System.out.println("vuoi Validare un abbonamento o un biglietto ?");
+                                            System.out.println("\n1. Biglietto\n2. Abbonamento");
+
+                                            int sceltaTitoloViaggio = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            System.out.println("Scelta inserita: " + sceltaTitoloViaggio);
+
+                                            switch (sceltaTitoloViaggio) {
+                                                case 1 -> archivioGestionale.validaBiglietto(scanner, em, utenteLoggato);
+                                                case 2 -> {
+                                                    System.out.print("Inserisci il codice tessera: ");
+                                                    String codiceTessera = scanner.nextLine();
+                                                    archivioGestionale.validitàAbbonamento(scanner, em, codiceTessera);
+                                                }
+
+                                                default -> System.out.println("Scelta titolo di viaggio non valida.");
+                                            }
+                                        }
                                         case 0 -> {
                                             adminMenu = false;
                                             System.out.println("Logout effettuato.");
@@ -112,7 +146,6 @@ public class MainGestionale {
                                     System.out.println("3. Visualizza le tratte con i mezzi affidati");
                                     System.out.println("4. Ottieni un Biglietto o un Abbonamento");
                                     System.out.println("5. Valida un Biglietto o un Abbonamento");
-                                    System.out.println("6. Rinnova una Tessera o un Abbonamento scaduto o in scadenza");
                                     System.out.println("0. Logout");
                                     System.out.print("Scegli un'opzione: ");
 
@@ -130,6 +163,42 @@ public class MainGestionale {
                                             Tessera tessera = tesseraDao.findByUtenteId(utenteLoggato.getId());
                                             if (tessera != null) System.out.println(tessera);
                                             else System.out.println("Tessera non trovata.");
+                                        }
+                                        case 3 -> archivioGestionale.visualizzaTratteMezzi();
+                                        case 4 -> {
+                                            System.out.println("vuoi un abbonamento o un biglietto ?");
+                                            System.out.println("\n1. Biglietto\n2. Abbonamento");
+
+                                            int sceltaTitoloViaggio = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            System.out.println("Scelta inserita: " + sceltaTitoloViaggio);
+
+                                            switch (sceltaTitoloViaggio) {
+                                                case 1 -> archivioGestionale.ottieniBiglietto(scanner, em, utenteLoggato);
+                                                case 2 -> archivioGestionale.ottieniAbbonamento(scanner, em, utenteLoggato);
+                                                default -> System.out.println("Scelta titolo di viaggio non valida.");
+                                            }
+                                        }
+                                        case 5 -> {
+                                            System.out.println("vuoi Validare un abbonamento o un biglietto ?");
+                                            System.out.println("\n1. Biglietto\n2. Abbonamento");
+
+                                            int sceltaTitoloViaggio = scanner.nextInt();
+                                            scanner.nextLine();
+
+                                            System.out.println("Scelta inserita: " + sceltaTitoloViaggio);
+
+                                            switch (sceltaTitoloViaggio) {
+                                                case 1 -> archivioGestionale.validaBiglietto(scanner, em, utenteLoggato);
+                                                case 2 -> {
+                                                    System.out.print("Inserisci il codice tessera: ");
+                                                    String codiceTessera = scanner.nextLine();
+                                                    archivioGestionale.validitàAbbonamento(scanner, em, codiceTessera);
+                                                }
+
+                                                default -> System.out.println("Scelta titolo di viaggio non valida.");
+                                            }
                                         }
                                         case 0 -> {
                                             userMenu = false;

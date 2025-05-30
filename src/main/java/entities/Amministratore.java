@@ -1,4 +1,3 @@
-// Classe Amministratore aggiornata
 package entities;
 
 import jakarta.persistence.Entity;

@@ -34,4 +34,8 @@ public class BigliettoDao {
                 .getSingleResult();
     }
 
+    public void save(EntityManager em, Biglietto biglietto) {
+        em.persist(biglietto);
+    }
+
 }

@@ -45,4 +45,10 @@ public class UtenteDao {
         em.remove(em.contains(utente) ? utente : em.merge(utente));
         em.getTransaction().commit();
     }
+
+    public Utente findByUsername(EntityManager em, String username) {
+        return em.createQuery("SELECT u FROM Utente u WHERE u.username = :username", Utente.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
 }

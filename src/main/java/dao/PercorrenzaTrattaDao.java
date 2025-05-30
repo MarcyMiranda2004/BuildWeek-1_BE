@@ -1,5 +1,6 @@
 package dao;
 
+import entities.Mezzo;
 import entities.PercorrenzaTratta;
 import entities.Tratta;
 import jakarta.persistence.EntityManager;
@@ -46,6 +47,20 @@ public class PercorrenzaTrattaDao {
 
     public List<Tratta> findAllTratte() {
         return em.createQuery("SELECT DISTINCT p.tratta FROM percorrenza_tratte p", Tratta.class)
+                .getResultList();
+    }
+
+    public class PercorrenzaTrattaDAO {
+        public List<Mezzo> findMezziByTratta(EntityManager em, Tratta tratta) {
+            return em.createQuery("SELECT DISTINCT p.mezzo FROM PercorrenzaTratta p WHERE p.tratta = :tratta", Mezzo.class)
+                    .setParameter("tratta", tratta)
+                    .getResultList();
+        }
+    }
+
+    public List<Mezzo> findMezziByTratta(EntityManager em, Tratta tratta) {
+        return em.createQuery("SELECT DISTINCT p.mezzo FROM percorrenza_tratte p WHERE p.tratta = :tratta", Mezzo.class)
+                .setParameter("tratta", tratta)
                 .getResultList();
     }
 
