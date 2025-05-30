@@ -3,8 +3,11 @@ package dao;
 import entities.Abbonamento;
 import entities.Tessera;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TesseraDao {
 
@@ -26,11 +29,27 @@ public class TesseraDao {
 
     public Tessera findByUtenteId(Long utenteId) {
         return em.createQuery("""
-                SELECT t FROM Tessera t WHERE t.utente.id = :uid
+                SELECT t FROM tessere t WHERE t.utente.id = :uid
             """, Tessera.class)
                 .setParameter("uid", utenteId)
                 .getSingleResult();
     }
+
+    public List<Tessera> findAll() {
+        return em.createQuery("SELECT t FROM tessere t", Tessera.class).getResultList();
+    }
+
+    public Tessera findByCodice(String codice) {
+        try {
+            TypedQuery<Tessera> query = em.createQuery(
+                    "SELECT t FROM tessere t WHERE t.codice = :codice", Tessera.class);
+            query.setParameter("codice", codice);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 
     public void rinnovaTessera(Long id) {
         em.getTransaction().begin();
@@ -62,4 +81,6 @@ public class TesseraDao {
         }
         em.getTransaction().commit();
     }
+
+
 }

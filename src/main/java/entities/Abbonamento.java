@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "abbonamenti")
 public class Abbonamento extends TitoloViaggio {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -74,6 +74,7 @@ public class Abbonamento extends TitoloViaggio {
         abbonamento.setTessera(tessera);
         return abbonamento;
     }
+
 
     @Override
     public String toString() {

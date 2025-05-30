@@ -25,6 +25,9 @@ public class TrattaDao {
         return em.find(Tratta.class, id);
     }
 
+    public List<Tratta> findAll(EntityManager em) {
+        return em.createQuery("SELECT t FROM tratte t", Tratta.class).getResultList();
+    }
 
     public List<Integer> getTempiEffettiviByTratta(String zonaPartenza, String capolinea) {
         String jpql = "SELECT p.tempoEffettivoMinuti FROM PercorrenzaTratta p " +

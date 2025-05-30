@@ -3,6 +3,8 @@ package dao;
 import entities.PuntoVendita;
 import jakarta.persistence.EntityManager;
 
+import java.util.List;
+
 public class PuntoVenditaDao {
     private EntityManager em;
 
@@ -18,6 +20,10 @@ public class PuntoVenditaDao {
 
     public PuntoVendita findById(Long id) {
         return em.find(PuntoVendita.class, id);
+    }
+
+    public List<PuntoVendita> findAll(EntityManager em) {
+        return em.createQuery("SELECT p FROM punti_vendita p", PuntoVendita.class).getResultList();
     }
 }
 

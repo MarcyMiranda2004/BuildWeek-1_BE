@@ -1,9 +1,8 @@
-// Classe Amministratore aggiornata
 package entities;
 
 import jakarta.persistence.Entity;
 
-@Entity
+@Entity(name = "amministratori")
 public class Amministratore extends Utente {
 
     public Amministratore() {}

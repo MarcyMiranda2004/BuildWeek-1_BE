@@ -3,7 +3,7 @@ package entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Utente")
+@Table(name = "utenti")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utente {
 
@@ -20,6 +20,9 @@ public class Utente {
 
     @Column(nullable = false, length = 20)
     private String password;
+
+    @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Tessera tessera;
 
     public Utente() {
     }
@@ -44,6 +47,10 @@ public class Utente {
     public String getPassword() {return password;}
 
     public void setPassword(String password) {this.password = password;}
+
+    public Tessera getTessera() {return tessera;}
+    public void setTessera(Tessera tessera) {this.tessera = tessera;}
+
 
     @Override
     public String toString() {

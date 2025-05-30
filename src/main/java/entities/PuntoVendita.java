@@ -2,7 +2,7 @@ package entities;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "punti_vendita")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PuntoVendita {
 
