@@ -21,7 +21,6 @@ public class Tratta {
     @Column(nullable = false)
     private int tempoPrevistoMinuti;
 
-    // Lista delle percorrenze di questa tratta
     @OneToMany(mappedBy = "tratta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PercorrenzaTratta> percorrenze = new ArrayList<>();
 

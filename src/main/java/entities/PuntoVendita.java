@@ -2,6 +2,8 @@ package entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity(name = "punti_vendita")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PuntoVendita {
@@ -15,6 +17,9 @@ public abstract class PuntoVendita {
 
     @Column(nullable = false)
     private String indirizzo;
+
+    @OneToMany
+    private List<TitoloViaggio> titoliViaggio;
 
     public PuntoVendita() {}
 
